@@ -1,33 +1,17 @@
-# Howdy Folks! 👋 I'm Christian.
+# Howdy Folks! 👋
 
-Welcome to my myspace page.
+I'm Christian. I'm a software engineer, generalist, pacific crest trail thru hiker and dog dad.
 
-## Languages 🗣, Tools 🔧 and Products 🎁 That I Use Daily
-<p>
-<img src="https://img.shields.io/static/v1?message=go&label=&logo=go&color=blue&style=for-the-badge"/>
-<img src="https://img.shields.io/static/v1?message=Python&label=&logo=python&color=yellow&style=for-the-badge"/>
-<img src="https://img.shields.io/static/v1?message=JavaScript&label=&logo=JavaScript&color=black&style=for-the-badge"/>
-</p>
-<p>
-<img src="https://img.shields.io/static/v1?message=TF&label=&logo=terraform&color=purple&style=for-the-badge"/>
-<img src="https://img.shields.io/static/v1?message=git&label=&logo=git&color=white&style=for-the-badge"/>
-<img src="https://img.shields.io/static/v1?message=containers&label=&logo=docker&color=lightblue&style=for-the-badge"/>
-<img src="https://img.shields.io/static/v1?message=linux&label=&logo=debian&color=A81D33&style=for-the-badge"/>
-</p>
-<p>
-<img src="https://img.shields.io/static/v1?message=github&label=&logo=github&color=grey&style=for-the-badge"/>
-<img src="https://img.shields.io/static/v1?message=AWS&label=&logo=amazon+aws&color=yellow&style=for-the-badge"/>
-<img src="https://img.shields.io/static/v1?message=CircleCI&label=&logo=circleci&color=green&style=for-the-badge"/>
-</p>
+### Languages
 
-## Here's some that I kind of miss
-<p>
-<img src="https://img.shields.io/static/v1?message=Java&label=&logo=Java&color=red&style=for-the-badge"/>
-<img src="https://img.shields.io/static/v1?message=c%2B%2B&label=&logo=c%2B%2B&color=lightblue&style=for-the-badge"/>
-</p>
-<p>
-<img src="https://img.shields.io/static/v1?message=spring&label=&logo=spring&color=6DB33F&logoColor=white&style=for-the-badge"/>
-</p>
-<p>
-<img src="https://img.shields.io/static/v1?message=Jenkins&label=&logo=jenkins&color=D24939&logoColor=black&style=for-the-badge"/>
-</p>
+![Python](https://img.shields.io/badge/-Python-000?&logo=Python)
+![Go](https://img.shields.io/badge/-Go-000?&logo=Go)
+![Java](https://img.shields.io/badge/-Java-000?&logo=Java)
+![Javascript](https://img.shields.io/badge/-JavaScript-000?&logo=JavaScript)
+
+### Tools
+![AWS](https://img.shields.io/badge/-AWS-000?&logo=Amazon-AWS)
+![Docker](https://img.shields.io/badge/-Docker-000?&logo=Docker)
+![Linux](https://img.shields.io/badge/-Linux-000?&logo=Linux)
+![Postgres](https://img.shields.io/badge/-Postgres-000?&logo=postgreSQL)
+![Redis](https://img.shields.io/badge/-Redis-000?&logo=Redis)

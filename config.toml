@@ -1,0 +1,17 @@
+baseURL = "https://c-kruse.com/"
+languageCode = "en-us"
+title = "c-kruse"
+theme = "hugo-tanka"
+
+[[menu.primary]]
+    name = "Home"
+    url = "/"
+    weight = 1
+[[menu.primary]]
+    name = "About"
+    url = "/about/"
+    weight = 2
+[[menu.primary]]
+    name = "GitHub"
+    url = "https://github.com/c-kruse"
+    weight = 3

@@ -1,0 +1,18 @@
+{{ define "main" }}
+    {{ partial "header" . }}
+
+    <div class="content">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-sm-12 col-lg-8">
+                    <div class="markdown">
+                        {{ readFile "README.md" | .RenderString }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {{ partial "utterances.html" .}}
+    {{ partial "footer" . }}
+{{ end }}
