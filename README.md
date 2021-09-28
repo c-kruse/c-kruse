@@ -1,6 +1,6 @@
 # Howdy Folks! 👋
 
-I'm Christian. I'm a software engineer, generalist, pacific crest trail thru hiker and dog dad.
+I'm Christian. I'm a software engineer, generalist, pacific crest trail thru hiker and dog dad. You can see my website at https://c-kruse.com.
 
 ### Languages
 

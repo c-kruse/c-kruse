@@ -1,0 +1,78 @@
+baseURL: "https://c-kruse.com/"
+title: c-kruse
+theme: PaperMod
+
+enableInlineShortcodes: true
+enableRobotsTXT: true
+buildDrafts: false
+buildFuture: false
+buildExpired: false
+enableEmoji: true
+
+minify:
+    disableXML: true
+
+menu:
+    main:
+        - identifier: posts
+          name: posts
+          url: /
+          weight: 20
+        - identifier: about
+          name: about
+          url: /about/
+          weight: 40
+        - identifier: tags
+          name: tags
+          url: /tags/
+          weight: 60
+        - identifier: github
+          name: github
+          url: https://github.com/c-kruse
+          weight: 80
+
+outputs:
+    home:
+        - HTML
+        - RSS
+        - JSON
+
+params:
+    env: production # to enable google analytics, opengraph, twitter-cards and schema.
+    description: "Christian Kruse's Blog - https://github.com/c-kruse/c-kruse"
+    author: Christian
+
+    defaultTheme: auto
+    ShowShareButtons: true
+    ShowReadingTime: true
+    # disableSpecial1stPost: true
+    displayFullLangName: true
+    ShowPostNavLinks: true
+    ShowBreadCrumbs: true
+    ShowCodeCopyButtons: true
+    ShowToc: true
+
+    homeInfoParams:
+        Title: "c-kruse"
+        Content: >
+            Hi.
+    socialIcons:
+        - name: github
+          url: "https://github.com/c-kruse"
+
+    assets:
+        favicon: "favicon.ico"
+        favicon16x16: "favicon-16x16.png"
+        favicon32x32: "favicon-32x32.png"
+        apple_touch_icon: "apple-touch-icon.png"
+        # safari_pinned_tab: "<link / abs url>"
+
+taxonomies:
+    category: categories
+    tag: tags
+    series: series
+
+markup:
+    goldmark:
+        renderer:
+            unsafe: true
