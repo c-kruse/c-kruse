@@ -55,10 +55,12 @@ params:
     homeInfoParams:
         Title: "c-kruse"
         Content: >
-            Hi.
+            Hi. I'm Christian. Have a pile of my thoughts.
     socialIcons:
         - name: github
           url: "https://github.com/c-kruse"
+        - name: linkedin
+          url: "https://www.linkedin.com/in/ctkruse"
 
     assets:
         favicon: "favicon.ico"
