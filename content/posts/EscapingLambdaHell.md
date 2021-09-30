@@ -109,3 +109,8 @@ func SendEmailToUser(context.Context, MyUserContext) (MyUserContext, error) {...
 [temporal.io](https://temporal.io/): This thing is sweet. Check it out.
 
 [The Self Provisioning Runtime](https://www.swyx.io/self-provisioning-runtime/) What got me thinking about this idea.
+
+
+### Edits
+
+Lol. Apparently this is nearly exactly what [Azure Durable Functions](https://docs.microsoft.com/en-us/azure/azure-functions/durable/durable-functions-overview?tabs=csharp) accomplishes with its orchestrator functions. It looks like AWS has a similar-ish offering in SWF, but it doesn't look like it has the neat tie-in with serverless FaaS that Durable Functions have.
