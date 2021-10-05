@@ -78,3 +78,13 @@ markup:
     goldmark:
         renderer:
             unsafe: true
+
+deployment:
+  order:
+    - ".jpg$"
+    - ".gif$"
+    - ".png$"
+  targets:
+    - name: prod
+      URL: s3://c-kruse.com-root?region=us-east-1
+      cloudFrontDistributionID: E2ZD2CT13C3AJZ
