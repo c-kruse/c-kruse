@@ -11,8 +11,8 @@ tags:
 ---
 
 Over the past two years I've been working with the supremely talented
-[sensu](sensu.io) team developing and maintaining the open source monitoring
-solution, [sensu-go](github.com/sensu/sensu-go). Throughout this journey a
+[sensu](https://sensu.io) team developing and maintaining the open source monitoring
+solution, [sensu-go](https://github.com/sensu/sensu-go). Throughout this journey a
 significant challenge has emerged - persistent reliability and stability
 problems in large deployments pushing the limits of sensu-go and its database,
 etcd. With the next major version of sensu-go, 7.0, we aim to apply our
