@@ -10,12 +10,13 @@ tags:
     - Queues
 ---
 
-Over the past two years I've been working with the supremely talented sensu-go
-team developing and maintaining the open source monitoring solution. Throughout
-this journey a significant challenge has emerged - persistent reliability and
-stability problems in large deployments pushing the limits of sensu-go and its
-database, etcd. With the next major version of sensu-go, 7.0, we aim to apply
-our learnings and alleviate these stability and reliability issues.
+Over the past two years I've been working with the supremely talented
+[sensu](sensu.io) team developing and maintaining the open source monitoring
+solution, [sensu-go](github.com/sensu/sensu-go). Throughout this journey a
+significant challenge has emerged - persistent reliability and stability
+problems in large deployments pushing the limits of sensu-go and its database,
+etcd. With the next major version of sensu-go, 7.0, we aim to apply our
+learnings and alleviate these stability and reliability issues.
 
 One last key feature that must be reimagined is the round robin scheduling
 feature. In order to implement this feature reliably, I believe we need a
@@ -113,4 +114,16 @@ under-provisioned environments. Depending on the particulars of the deployment
 this can result in all sorts of issues, from etcd nodes crashing with OOM errors
 to causing excessive leader elections as nodes struggle to keep up.
 
+## Tl;dr
 
+For the time being, round robin scheduling has been disabled in sensu-go 7.0.
+Our current implementation built on top of a ring buffer in etcd is unreliable,
+delivering at-most-once execution, and contributes to cluster instability. A
+message queue is necessary in order to deliver reliable round robin scheduling
+moving forward.
+
+I will be looking into several different messaging systems to identify their
+suitability for sensu-go. The ideal system can support both pub/sub and
+message queue modes, has a reliable message deduplication, and is open source
+and widely available. I hope to look at [NSQ](https://nsq.io/),
+[NATS](https://nats.io), [Apache Pulsar](https://pulsar.apache.org/) and more.
