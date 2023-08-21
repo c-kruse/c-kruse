@@ -18,7 +18,7 @@ problems in large deployments pushing the limits of sensu-go and its database,
 etcd. With the next major version of sensu-go, 7.0, we aim to apply our
 learnings and alleviate these stability and reliability issues.
 
-One last key feature that must be reimagined is the round robin scheduling
+One last key feature that needs reimagined is the round robin scheduling
 feature. In order to implement this feature reliably, I believe we need a
 message queuing system. Over the next few posts I hope to investigate potential
 queueing systems for their suitability. First, though, some background on the
@@ -29,7 +29,7 @@ current solution and its shortcomings.
 Sensu-go is a distributed system consisting of a number of (mostly) stateless
 backend nodes, an etcd database cluster, and upwards of 20k connected agent
 processes. In normal operation, agents open up a bi-directional connection to
-one of the backend nodes, the backend registers its presence in the etcd
+one of the backend nodes, the backend registers the agent's presence in the etcd
 database, and scheduled events are sent best effort from the backends to their
 connected agents based on configured "subscription" tags. This is the heart of
 sensu-go, a centralized monitoring job command center, where hosts can be
@@ -41,30 +41,45 @@ check requests being delivered to an agent.
 
 ## The round robin scheduling feature
 
-Round robin scheduling as it turns out is a rather popular sensu-go feature. It
-is frequently used for synthetics monitoring. Example: checking that
-`foo.acme.com` is available from hosts in a particular availability zone. In
-this use case it is likely desirable to check availability from _one_ host in
-the AZ to save resources and spare operators from ensuing alert storm when each
-host observes and reports the same outage.
+Round robin scheduling as it turns out is a rather popular sensu-go feature. By
+default when a check is scheduled on a subscription, it is executed on all
+connected agents with that subscription tag. With round robin scheduling, sensu
+attempts to schedule that check to run on only one agent in that group. This is
+frequently used for synthetics monitoring. For example, checking that an
+external service e.g. `amazonaws.com` is available from the hosts in a
+particular availability zone. In this case checking from all agents that the
+service is available is unnecessary and counterproductive. Instead, it
+would be better to schedule the check round robin so as to not depend on a
+particular agent's availability to execute this check and to not overwhelm
+operators with hundreds of agents reporting the same outage.
 
 ### The unreliable implementation
 
 At the core of round robin scheduling in sensu-go is a ring buffer, implemented
 by the `ring` package. In the case of round robin scheduling, each subscription
-in a sensu namespace gets its own ring. When `keepalived`, the backend component
+in a sensu namespace gets its own ring. `keepalived`, the backend component
 responsible for handling the periodic keepalive events pushed by agents to their
-connected backends, receives a keepalive from an agent it will add that agent
-name to the ring buffers belonging to each of the agent's subscriptions.
-`keepalived` will also remove agents from ring buffers if it knows that the
-agent has disconnected. The `schedulerd` component responsible for orchestrating
-the scheduling of checks will register a subscription with the ring buffer,
-describing the ring to watch as well as the schedule to advance the head of the
-ring. When the ring is advanced, `schedulerd` is notified of which agent is at
-the head of the ring, and will attempt to schedule the round robin check on that
+connected backends, manages the contents of these ring buffers. When
+`keepalived` receives a keepalive event from an agent it will add that agent to
+the ring buffer for each of the agent's subscriptions. When an agent does not
+report back in time for the next expected keepalive `keepalived` will remove the
+agent from all ring buffers. The `schedulerd` backend component is responsible
+for orchestrating the scheduling of checks. `schedulerd` registers Subscriptions
+with the ring buffer, which pick a head of the ring and a schedule to advance
+that head. When the head of the ring buffer is advanced, `schedulerd` is
+notified of the next head and attempts to schedule the round robin check on that
 agent if it is connected to that backend.
 
-Fundamentally this approach is flawed, as it can only ever promise at-most-once
+This algorithim is incredibly clever and has gotten the product this far. It
+works well enough in healthy environments and, I suspect, when it does drop the
+rare check execution it is unlikely to be noticed. This design has some
+properties that make it quite nice, as well. The ring advances alphabetically,
+equally covering the entire subscription pool. Also, because of etcd's strong
+transactional consistency guarantees the ring operations are idempotent, sparing
+the sensu backends from expensive coordination finding a leader to advance the
+ring.
+
+Fundamentally this approach is flawed. It can only ever promise at-most-once
 execution of round robin checks. At any increment around the ring buffer it can
 advance to an agent that has been separated from the cluster, or becomes
 separated before the check request can be serviced. The ring buffer strategy
@@ -76,19 +91,20 @@ An at-least-once execution would require a few changes.
 1.) The ring buffer would need replaced by a more suitable strategy: a message
 queue. Instead of coming to a distributed consensus of which agent the work is
 to be scheduled on, the work should be described in a message and offered to the
-group, locked by one consumer, and either acknowledge and deleted or unlocked.
-This is of course what message queues do.
+group, locked by one consumer, and either acknowledge and deleted or unlocked
+for another consumer to pick up.
 
 2.) The use of sensu backends as brokers between agents and the message store
 would either necessitate further changes to the agent/backend communication
 protocol to facilitate an acknowledgement, or preferably a change in
 architecture where the agents consume directly from the queue.
 
-3.) Check executions should be scheduled only once. This necessitates either a
-message queueing system that supports deduplication or for sensu backends to
-come to consensus on a leader. Deduplication is the preferable option as the
-later requires either a reliable external locking service or coordination
-between backends using an asynchronous consensus algorithm.
+3.) Check executions should be scheduled only once. This means that sensu
+backends either need a new mechanism to come to consensus on a leader to publish
+the scheduling messages, or the messaging system needs to support deduplication.
+Deduplication is the preferable option as the former would require either an
+external locking service to function or complicated coordination between
+backends using an asynchronous consensus algorithm.
 
 ### The stability issues it causes
 
@@ -108,11 +124,11 @@ excessive leader elections.
 Watchers allow clients to subscribe to a stream of changes made in the etcd
 key-value store. In round robin scheduling each sensu backend creates a watcher
 for each round robin check in order to watch for a trigger to the next ring
-advancement. Watchers tend to impact an etcd node's memory utilization. As with
-leases, this excess memory utilization can cause excessive leader elections in
-under-provisioned environments. Depending on the particulars of the deployment
-this can result in all sorts of issues, from etcd nodes crashing with OOM errors
-to causing excessive leader elections as nodes struggle to keep up.
+advancement. Watchers tend to mainly impact an etcd node's memory utilization.
+Sensu's usage patterns can put a surprisingly high memory demands on an etcd
+database. In under-provisioned environments the memory impact of many round
+robin schedulers and their watchers can overwhelm a cluster, causing individual
+nodes to crash and the cluster to fall behind.
 
 ## Tl;dr
 
