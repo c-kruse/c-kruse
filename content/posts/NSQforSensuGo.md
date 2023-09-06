@@ -20,8 +20,8 @@ After analyzing NSQ's functionality and its operation under load similar to
 what I expect a large sensu-go cluster may put on it, I have found that NSQ is
 not a suitable candidate for sensu-go's round robin message queue solution.
 NSQ's fundamental design would necessitate significant changes to sensu-go's
-architecture in order to accommodate NSQ's lack of message de-duplication, and
-the connection model used by NSQ would require functional changes to the round
+architecture in order to accommodate NSQ's lack of message de-duplication. The
+connection model used by NSQ would require functional changes to the round
 robin scheduling feature before it _may_ be operationally tenable.
 
 ## NSQ's Messaging Model
@@ -34,7 +34,7 @@ subscriber.
 
 {{< figure src="/postmedia/NSQMessageModel.gif" title="Message flow through NSQ" >}}
 
-This is model is generally compatible with sensu's round robin scheduling
+This model is generally compatible with sensu's round robin scheduling
 feature, with a small caveat.
 
 In the case of sensu's round robin check scheduling, requests could be
@@ -167,7 +167,7 @@ large number of consumers, I ran my own suite.
 
 ### Goal
 
-Show now NSQ performs under a constant load of 40k messages per second with a
+Show how NSQ performs under a constant load of 40k messages per second with a
 fleet of 50k simulated sensu agents while subscribed to an increasing number of
 NSQ topics (sensu-go subscriptions.) Since consumer connections are created by
 topic, each nsqd instance should expect to see 50k connections per topic. I'd
